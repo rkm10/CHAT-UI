@@ -17,8 +17,13 @@ import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import SettingsIcon from '@mui/icons-material/Settings';
 
+import ChatComponent from './ChatComponent';
+import ProfileComponent from './ProfileComponent';
+import SettingsComponent from './SettingsComponent';
+
 const drawerWidth = 240;
 
+// ... (keep all the existing styled components: openedMixin, closedMixin, DrawerHeader, AppBar, Drawer)
 const openedMixin = (theme) => ({
     width: drawerWidth,
     transition: theme.transitions.create('width', {
@@ -45,7 +50,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
     ...theme.mixins.toolbar,
 }));
 
@@ -100,6 +104,28 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function Dashboard() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [profileOpen, setProfileOpen] = React.useState(false);
+    const [currentView, setCurrentView] = React.useState('chat'); // Default view is chat
+
+    // Function to render the appropriate component based on currentView
+    const renderView = () => {
+        switch (currentView) {
+            case 'profile':
+                return <ProfileComponent />;
+            case 'chat':
+                return <ChatComponent />;
+            case 'settings':
+                return <SettingsComponent />;
+            default:
+                return <ChatComponent />;
+        }
+    };
+
+    const handleOpenProfile = () => {
+        console.log('Opening profile');
+
+        setProfileOpen(!profileOpen);
+    };
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -110,6 +136,7 @@ export default function Dashboard() {
                         color="inherit"
                         aria-label="open drawer"
                         edge="start"
+                        onClick={handleOpenProfile}
                         sx={[
                             {
                                 marginRight: 5,
@@ -127,38 +154,16 @@ export default function Dashboard() {
             <Drawer variant="permanent" open={open}>
                 <DrawerHeader />
                 <List>
-                    {/* Profile Section */}
-                    {/* <ListItem disablePadding sx={{ display: 'block' }}>
-                        <ListItemButton
-                            sx={{
-                                minHeight: 48,
-                                px: 2.5,
-                                justifyContent: open ? 'initial' : 'center',
-                            }}
-                        >
-                            <ListItemIcon
-                                sx={{
-                                    minWidth: 0,
-                                    mr: open ? 3 : 'auto',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <PersonRoundedIcon />
-                            </ListItemIcon>
-                            <ListItemText 
-                                primary="Profile" 
-                                sx={{ opacity: open ? 1 : 0 }}
-                            />
-                        </ListItemButton>
-                    </ListItem> */}
-                    
+
                     {/* Conversations Section */}
                     <ListItem disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
+                            onClick={() => setCurrentView('chat')}
                             sx={{
                                 minHeight: 48,
                                 px: 2.5,
                                 justifyContent: open ? 'initial' : 'center',
+                                bgcolor: currentView === 'chat' ? 'action.selected' : 'transparent',
                             }}
                         >
                             <ListItemIcon
@@ -170,24 +175,26 @@ export default function Dashboard() {
                             >
                                 <ChatBubbleOutlineIcon />
                             </ListItemIcon>
-                            <ListItemText 
-                                primary="Conversations" 
+                            <ListItemText
+                                primary="Conversations"
                                 sx={{ opacity: open ? 1 : 0 }}
                             />
                         </ListItemButton>
                     </ListItem>
                 </List>
-                
+
                 {/* Settings at the bottom */}
                 <Box sx={{ marginTop: 'auto' }}>
                     <Divider />
                     <List>
                         <ListItem disablePadding sx={{ display: 'block' }}>
                             <ListItemButton
+                                onClick={() => setCurrentView('settings')}
                                 sx={{
                                     minHeight: 48,
                                     px: 2.5,
                                     justifyContent: open ? 'initial' : 'center',
+                                    bgcolor: currentView === 'settings' ? 'action.selected' : 'transparent',
                                 }}
                             >
                                 <ListItemIcon
@@ -199,8 +206,8 @@ export default function Dashboard() {
                                 >
                                     <SettingsIcon />
                                 </ListItemIcon>
-                                <ListItemText 
-                                    primary="Settings" 
+                                <ListItemText
+                                    primary="Settings"
                                     sx={{ opacity: open ? 1 : 0 }}
                                 />
                             </ListItemButton>
@@ -208,14 +215,10 @@ export default function Dashboard() {
                     </List>
                 </Box>
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <Box component="main" sx={{ flexGrow: 1 }}>
                 <DrawerHeader />
-                <Typography sx={{ marginBottom: 2 }}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
-                    enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
-                    imperdiet.
-                </Typography>
+                {profileOpen ? <ProfileComponent /> : ''}
+                {renderView()}
             </Box>
         </Box>
     );

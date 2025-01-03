@@ -5,7 +5,6 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import ShortcutIcon from '@mui/icons-material/Shortcut';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ChatIcon from '@mui/icons-material/Chat';
-import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 
 export default function ProfileComponent() {
     const [available, setAvailable] = useState(true);
@@ -20,8 +19,9 @@ export default function ProfileComponent() {
             <List>
                 <ListItem>
                     <ListItemIcon><PersonIcon /></ListItemIcon>
-                    <ListItemText primary="Available" />
+                    <ListItemText primary="Available Free" />
                     <Switch checked={available} onChange={() => setAvailable(!available)} />
+
                 </ListItem>
 
                 <ListItem button>
@@ -37,20 +37,6 @@ export default function ProfileComponent() {
                 <ListItem button>
                     <ListItemIcon><NotificationsIcon /></ListItemIcon>
                     <ListItemText primary="Notifications" />
-                </ListItem>
-
-                <ListItem>
-                    <ListItemIcon><WorkspacePremiumIcon /></ListItemIcon>
-                    <ListItemText
-                        primary="Package"
-                        secondary={
-                            <Box>
-                                <Typography variant="subtitle2" color="primary">TRIAL</Typography>
-                                <Typography variant="caption">Ends in 12 days</Typography>
-                            </Box>
-                        }
-                    />
-                    <Typography color="primary" sx={{ cursor: 'pointer' }}>Upgrade</Typography>
                 </ListItem>
 
                 <ListItem button>

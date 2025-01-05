@@ -110,8 +110,6 @@ export default function Dashboard() {
     // Function to render the appropriate component based on currentView
     const renderView = () => {
         switch (currentView) {
-            case 'profile':
-                return <ProfileComponent />;
             case 'chat':
                 return <ChatComponent />;
             case 'settings':

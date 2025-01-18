@@ -28,7 +28,7 @@ const ChatMessage = styled(Paper)(({ theme, isUser }) => ({
 
 const ChatContainer = styled(Box)({
   display: 'flex',
-  height: 'calc(100vh - 165px)',
+  height: 'calc(100vh - 164px)',
   overflow: 'hidden',
 });
 
@@ -330,7 +330,7 @@ const ChatComponent = () => {
   });
 
   return (
-    <Box sx={{ width: '100%', height: '100vh', overflow: 'hidden' }}>
+    <Box sx={{ width: '100%', overflow: 'auto' }}>
       {/* Tabs */}
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs
@@ -338,8 +338,8 @@ const ChatComponent = () => {
           onChange={(e, v) => setMainTab(v)}
           TabIndicatorProps={{ style: { backgroundColor: '#3f51b5' } }}
         >
-          <Tab label="Open" style={{ minWidth: '50%' }} />
-          <Tab label="Resolved" style={{ minWidth: '50%' }} />
+          <Tab label="Open" />
+          <Tab label="Resolved" />
         </Tabs>
         <Tabs
           value={subTab}
@@ -353,7 +353,7 @@ const ChatComponent = () => {
 
       <ChatContainer>
         {/* Chat List */}
-        <Box sx={{ width: selectedChat ? '30%' : '100%', overflow: 'auto', transition: 'width 0.3s' }}>
+        <Box sx={{ width: '30%', overflow: 'auto', transition: 'width 0.3s' }}>
           {filteredChats.map((chat) => (
             <Box
               key={chat.id}
@@ -370,7 +370,23 @@ const ChatComponent = () => {
                 backgroundColor: selectedChat === chat.id ? 'action.selected' : 'transparent',
               }}
             >
-              <Avatar sx={{ bgcolor: 'primary.main' }}>
+              <Avatar sx={{
+                bgcolor: (() => {
+                  const colors = [
+                    '#2196F3', // Blue
+                    '#F44336', // Red
+                    '#4CAF50', // Green
+                    '#9C27B0', // Purple
+                    '#FFEB3B', // Yellow
+                    '#E91E63', // Pink
+                    '#3F51B5', // Indigo
+                    '#FF9800', // Orange
+                    '#009688', // Teal
+                    '#00BCD4'  // Cyan
+                  ];
+                  return colors[chat.userId % colors.length];
+                })()
+              }}>
                 {sampleUsers[chat.userId].avatar}
               </Avatar>
               <Box sx={{ flex: 1 }}>
@@ -395,8 +411,8 @@ const ChatComponent = () => {
         </Box>
 
         {/* Chat View */}
-        {selectedChat && (
-          <Box sx={{ width: '70%', display: 'flex', flexDirection: 'column' }}>
+        {selectedChat ? (
+          <Box sx={{ width: '50%', display: 'flex', flexDirection: 'column' }}>
             {/* Chat Header */}
             <Box sx={{ display: 'flex', borderBottom: 1, borderColor: 'divider', p: 2 }}>
               <IconButton onClick={() => setSelectedChat(null)}>
@@ -446,7 +462,51 @@ const ChatComponent = () => {
               </IconButton>
             </MessageInputContainer>
           </Box>
+        ) : (
+          <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Typography variant="h6" color="text.secondary">
+              Select a chat to start messaging
+            </Typography>
+          </Box>
         )}
+
+        {/* Right Section - Client Details */}
+        <Box sx={{ width: '20%', borderLeft: 1, borderColor: 'divider', p: 2, overflow: 'auto' }}>
+          <Box sx={{ textAlign: 'center', mb: 3 }}>
+            <Avatar sx={{ width: 80, height: 80, mx: 'auto', mb: 2 }} />
+            <Typography variant="h6">Raj Kumar</Typography>
+            <Typography variant="body2" color="text.secondary">
+              Rajkumar.m@noveloffice.in
+            </Typography>
+          </Box>
+
+          <Divider sx={{ my: 2 }} />
+
+          <Typography variant="subtitle2" gutterBottom>
+            Ticket Details
+          </Typography>
+          <Typography variant="body2" paragraph>
+            Ticket ID: #1234
+          </Typography>
+          <Typography variant="body2" paragraph>
+            Created: Jan 2, 2025
+          </Typography>
+          <Typography variant="body2" paragraph>
+            Status: Open
+          </Typography>
+
+          <Divider sx={{ my: 2 }} />
+
+          <Typography variant="subtitle2" gutterBottom>
+            Additional Information
+          </Typography>
+          <Typography variant="body2" paragraph>
+            Account Type: Premium
+          </Typography>
+          <Typography variant="body2" paragraph>
+            Last Login: Today at 10:30 AM
+          </Typography>
+        </Box>
       </ChatContainer>
     </Box>
   );
